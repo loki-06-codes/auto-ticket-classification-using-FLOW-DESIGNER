@@ -1,0 +1,18 @@
+FILE 4: Classification Rules Table (Optional but Best Practice)
+Create Table u_ticket_classification_rule
+Fields: u_keywords (string), u_category, u_subcategory, u_group (reference to sys_user_group)
+Then replace hard-coded logic with this code in Flow:
+javascript
+// Look up matching rule
+var gr = new GlideRecord('u_ticket_classification_rule');
+gr.addQuery('u_active', true);
+gr.query();
+while(gr.next()){
+    var keywords = gr.u_keywords.toString().split(',');
+    for(var i=0; i<keywords.length; i++){
+        if(fullText.indexOf(keywords[i].toLowerCase().trim()) > -1){
+            // MATCH FOUND
+            return gr;
+        }
+    }
+}

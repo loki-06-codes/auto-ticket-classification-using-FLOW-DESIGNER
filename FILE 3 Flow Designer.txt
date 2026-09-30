@@ -1,0 +1,8 @@
+FILE 3: Flow Designer - Update Record Step
+Next Step after Script: Update Trigger Record
+Set field values:
+Category = Script Step -> category
+Subcategory = Script Step -> subcategory
+Assignment group = Get Sys ID from Group Name (Look Up Record on sys_user_group where name = assignment_group)
+Priority = Script Step -> priority
+Work notes = Auto-classified as ${category} / ${subcategory} with confidence ${confidence}. Routed to ${assignment_group}

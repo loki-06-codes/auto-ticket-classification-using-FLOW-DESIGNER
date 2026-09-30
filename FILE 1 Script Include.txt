@@ -1,0 +1,64 @@
+FILE 1: Script Include - TicketClassifierUtil
+Path: System Definition > Script Includes
+Create new -> Name: TicketClassifierUtil -> Client callable: false
+javascript
+var TicketClassifierUtil = Class.create();
+TicketClassifierUtil.prototype = {
+    initialize: function() {},
+
+    classify: function(shortDesc, description) {
+        var fullText = (shortDesc + " " + description).toLowerCase();
+        var result = {
+            category: "Inquiry",
+            subcategory: "General",
+            priority: "4",
+            assignment_group: "Service Desk",
+            confidence: "low"
+        };
+
+        // Rule 1: Software / Access
+        if (fullText.match(/password|login|signin|outlook|email|teams|o365|access denied/)) {
+            result.category = "Software";
+            result.subcategory = "Email / Access";
+            result.assignment_group = "Software Support";
+            result.priority = this._getPriority(fullText);
+            result.confidence = "high";
+        }
+        // Rule 2: Network
+        else if (fullText.match(/wifi|vpn|network|internet|lan|wan|firewall|dns/)) {
+            result.category = "Network";
+            result.subcategory = "Connectivity";
+            result.assignment_group = "Network Team";
+            result.priority = "2";
+            result.confidence = "high";
+        }
+        // Rule 3: Hardware
+        else if (fullText.match(/laptop|desktop|printer|hardware|monitor|mouse|keyboard|battery|blue screen/)) {
+            result.category = "Hardware";
+            result.subcategory = "Hardware Issue";
+            result.assignment_group = "Hardware Team";
+            result.priority = "3";
+            result.confidence = "high";
+        }
+        // Rule 4: SAP / ERP
+        else if (fullText.match(/sap|erp|purchase order|invoice/)) {
+            result.category = "Software";
+            result.subcategory = "ERP";
+            result.assignment_group = "SAP Support";
+            result.priority = "3";
+            result.confidence = "medium";
+        }
+
+        return result;
+    },
+
+    _getPriority: function(text) {
+        if (text.match(/down|critical|urgent|not working|all users|production/))
+            return "1";
+        if (text.match(/slow|unable to work|important/))
+            return "2";
+        return "3";
+    },
+
+    type: 'TicketClassifierUtil'
+};

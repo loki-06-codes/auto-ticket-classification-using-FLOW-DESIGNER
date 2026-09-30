@@ -1,0 +1,21 @@
+FILE 2: Flow Action Script - Use inside Flow Designer
+Path: Flow Designer > Action > New Action > Create Script Step
+In Flow: Trigger = Record Created [incident]
+Inputs for Script Step:
+short_desc -> Trigger Record > Short Description
+long_desc -> Trigger Record > Description
+Script Step Code:javascript(function execute(inputs, outputs) {
+    var classifier = new TicketClassifierUtil();
+    var classification = classifier.classify(inputs.short_desc, inputs.long_desc);
+
+    outputs.category = classification.category;
+    outputs.subcategory = classification.subcategory;
+    outputs.assignment_group = classification.assignment_group;
+    outputs.priority = classification.priority;
+
+})(inputs, outputs);
+Outputs:
+category (String)
+subcategory (String)
+assignment_group (String)
+priority (String)
